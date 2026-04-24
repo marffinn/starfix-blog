@@ -1,0 +1,95 @@
+local_backend: true
+
+backend:
+  name: github
+  repo: marffinn/starfix-blog
+  branch: main
+
+media_folder: "public/uploads"
+public_folder: "/starfix-blog/uploads"
+
+collections:
+  - name: "posts"
+    label: "Wpisy blogowe"
+    label_singular: "Wpis"
+    folder: "src/content/posts"
+    extension: "md"
+    format: "yaml-frontmatter"
+    create: true
+    delete: true
+    slug: "{{fields.slug}}"
+    identifier_field: "slug"
+    summary: "{{title}} · {{category}}"
+    sortable_fields: ["date", "title", "category"]
+    fields:
+      - { name: "title", label: "Tytuł", widget: "string" }
+      - { name: "slug", label: "Slug (URL)", widget: "string", hint: "Tylko małe litery, cyfry i myślniki. Używany w adresie: /post/TWOJ-SLUG" }
+      - name: "category"
+        label: "Kategoria"
+        widget: "select"
+        options:
+          - "Termoizolacja"
+          - "Drewno"
+          - "Wykończenie"
+          - "Mocowania"
+          - "Dachy"
+          - "Narzędzia"
+      - { name: "excerpt", label: "Zajawka", widget: "text" }
+      - { name: "date", label: "Data publikacji", widget: "datetime", date_format: "YYYY-MM-DD", time_format: false, picker_utc: false }
+      - { name: "readTime", label: "Czas czytania (min)", widget: "number", default: 5, min: 1, max: 60, value_type: "int" }
+      - { name: "body", label: "Treść", widget: "markdown" }
+
+  - name: "settings"
+    label: "Ustawienia strony"
+    files:
+      - name: "site"
+        label: "Strona główna i stopka"
+        file: "src/content/settings.json"
+        fields:
+          - name: "hero"
+            label: "Hero (nagłówek strony głównej)"
+            widget: "object"
+            fields:
+              - { name: "badge", label: "Odznaka", widget: "string" }
+              - { name: "titlePrefix", label: "Tytuł – część 1", widget: "string" }
+              - { name: "titleHighlight", label: "Tytuł – wyróżnienie", widget: "string" }
+              - { name: "titleSuffix", label: "Tytuł – część 2", widget: "string" }
+              - { name: "subtitle", label: "Podtytuł", widget: "text" }
+              - { name: "searchPlaceholder", label: "Placeholder wyszukiwarki", widget: "string" }
+          - name: "storeCta"
+            label: "Baner sklepu (CTA)"
+            widget: "object"
+            fields:
+              - { name: "title", label: "Tytuł", widget: "string" }
+              - { name: "description", label: "Opis", widget: "text" }
+              - { name: "buttonLabel", label: "Etykieta przycisku", widget: "string" }
+              - { name: "url", label: "Adres URL", widget: "string" }
+          - name: "contact"
+            label: "Kontakt"
+            widget: "object"
+            fields:
+              - { name: "street", label: "Ulica", widget: "string" }
+              - { name: "city", label: "Kod i miasto", widget: "string" }
+              - { name: "phone", label: "Telefon", widget: "string" }
+              - { name: "email", label: "Email", widget: "string" }
+          - name: "openingHours"
+            label: "Godziny otwarcia"
+            widget: "object"
+            fields:
+              - { name: "weekdays", label: "Pon-Pt", widget: "string" }
+              - { name: "saturday", label: "Sobota", widget: "string" }
+              - { name: "note", label: "Dodatkowa informacja", widget: "string" }
+          - name: "footer"
+            label: "Stopka"
+            widget: "object"
+            fields:
+              - { name: "tagline", label: "Tagline", widget: "text" }
+              - { name: "copyright", label: "Copyright", widget: "string" }
+              - name: "links"
+                label: "Linki w stopce"
+                widget: "object"
+                fields:
+                  - { name: "shopLabel", label: "Sklep – etykieta", widget: "string" }
+                  - { name: "shopUrl", label: "Sklep – URL", widget: "string" }
+                  - { name: "siteLabel", label: "Strona główna – etykieta", widget: "string" }
+                  - { name: "siteUrl", label: "Strona główna – URL", widget: "string" }
