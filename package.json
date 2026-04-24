@@ -11,8 +11,7 @@
     "preview": "vite preview",
     "cms": "decap-server",
     "dev:cms": "concurrently -n vite,cms -c blue,magenta \"npm:dev\" \"npm:cms\"",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist --dotfiles"
+    "deploy": "node scripts/deploy.mjs"
   },
   "homepage": "https://marffinn.github.io/starfix-blog",
   "dependencies": {
