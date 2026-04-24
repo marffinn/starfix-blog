@@ -32,7 +32,6 @@ export default function BlogPost() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
       <header className="border-b border-border bg-card">
         <div className="container py-6">
           <Link href="/">
@@ -44,12 +43,9 @@ export default function BlogPost() {
         </div>
       </header>
 
-      {/* Main Content */}
       <main className="container py-12">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-          {/* Article */}
           <article className="lg:col-span-2">
-            {/* Meta Information */}
             <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground mb-6">
               <div className="flex items-center gap-2">
                 <Tag className="w-4 h-4 text-primary" />
@@ -65,12 +61,10 @@ export default function BlogPost() {
               </div>
             </div>
 
-            {/* Title */}
             <h1 className="text-4xl font-bold text-foreground mb-6">
               {post.title}
             </h1>
 
-            {/* Content */}
             <div className="prose prose-lg max-w-none text-foreground">
               {post.content.split('\n\n').map((paragraph, index) => {
                 if (paragraph.startsWith('**') && paragraph.endsWith('**')) {
@@ -100,7 +94,6 @@ export default function BlogPost() {
               })}
             </div>
 
-            {/* Share Section */}
             <div className="mt-12 pt-8 border-t border-border">
               <div className="flex items-center gap-4">
                 <span className="text-foreground font-semibold">Udostępnij:</span>
@@ -115,7 +108,6 @@ export default function BlogPost() {
               </div>
             </div>
 
-            {/* CTA */}
             <Card className="mt-12 p-8 bg-secondary">
               <h3 className="text-2xl font-bold text-foreground mb-4">
                 Interesują Cię produkty omawiane w tym artykule?
@@ -131,10 +123,8 @@ export default function BlogPost() {
             </Card>
           </article>
 
-          {/* Sidebar */}
           <aside className="lg:col-span-1">
             <div className="sticky top-24 space-y-8">
-              {/* Related Posts */}
               {relatedPosts.length > 0 && (
                 <div>
                   <h3 className="text-xl font-bold text-foreground mb-4">Powiązane artykuły</h3>
@@ -157,7 +147,6 @@ export default function BlogPost() {
                 </div>
               )}
 
-              {/* Newsletter */}
               <Card className="p-6 bg-secondary">
                 <h3 className="font-bold text-foreground mb-2">Bądź na bieżąco</h3>
                 <p className="text-sm text-muted-foreground mb-4">
@@ -175,7 +164,6 @@ export default function BlogPost() {
                 </form>
               </Card>
 
-              {/* Contact */}
               <Card className="p-6">
                 <h3 className="font-bold text-foreground mb-4">Masz pytania?</h3>
                 <p className="text-sm text-muted-foreground mb-4">
@@ -193,7 +181,6 @@ export default function BlogPost() {
         </div>
       </main>
 
-      {/* Footer */}
       <footer className="border-t border-border bg-card mt-16">
         <div className="container py-12">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">

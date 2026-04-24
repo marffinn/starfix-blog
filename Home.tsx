@@ -15,14 +15,13 @@ export default function Home() {
     return blogPosts.filter(post => {
       const matchesCategory = selectedCategory === 'Wszystkie' || post.category === selectedCategory;
       const matchesSearch = post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                           post.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
+        post.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
       return matchesCategory && matchesSearch;
     });
   }, [selectedCategory, searchQuery]);
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
       <header className="border-b border-border bg-card sticky top-0 z-50">
         <div className="container py-6">
           <div className="flex flex-col gap-4">
@@ -34,8 +33,7 @@ export default function Home() {
                 Poradniki i artykuły o technice zamocowań, termoizolacji i akcesoriach budowlanych
               </p>
             </div>
-            
-            {/* Search Bar */}
+
             <div className="relative">
               <Search className="absolute left-3 top-3 w-5 h-5 text-muted-foreground" />
               <input
@@ -50,10 +48,8 @@ export default function Home() {
         </div>
       </header>
 
-      {/* Main Content */}
       <main className="container py-12">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          {/* Sidebar - Categories */}
           <aside className="lg:col-span-1">
             <div className="sticky top-24">
               <h2 className="text-xl font-bold text-foreground mb-4">Kategorie</h2>
@@ -62,18 +58,16 @@ export default function Home() {
                   <button
                     key={category}
                     onClick={() => setSelectedCategory(category)}
-                    className={`w-full text-left px-4 py-2 rounded-lg transition-colors ${
-                      selectedCategory === category
-                        ? 'bg-primary text-primary-foreground font-semibold'
-                        : 'text-foreground hover:bg-secondary'
-                    }`}
+                    className={`w-full text-left px-4 py-2 rounded-lg transition-colors ${selectedCategory === category
+                      ? 'bg-primary text-primary-foreground font-semibold'
+                      : 'text-foreground hover:bg-secondary'
+                      }`}
                   >
                     {category}
                   </button>
                 ))}
               </div>
 
-              {/* Shop Link */}
               <div className="mt-8 p-4 bg-secondary rounded-lg">
                 <h3 className="font-bold text-foreground mb-2">Odwiedź nasz sklep</h3>
                 <p className="text-sm text-muted-foreground mb-4">
@@ -93,7 +87,6 @@ export default function Home() {
             </div>
           </aside>
 
-          {/* Blog Posts Grid */}
           <div className="lg:col-span-3">
             {filteredPosts.length === 0 ? (
               <div className="text-center py-12">
@@ -108,7 +101,6 @@ export default function Home() {
                     <a className="group">
                       <Card className="h-full overflow-hidden hover:shadow-lg transition-shadow cursor-pointer">
                         <div className="p-6 flex flex-col h-full">
-                          {/* Category Badge */}
                           <div className="flex items-center gap-2 mb-3">
                             <Tag className="w-4 h-4 text-primary" />
                             <span className="text-sm font-semibold text-primary">
@@ -116,17 +108,14 @@ export default function Home() {
                             </span>
                           </div>
 
-                          {/* Title */}
                           <h3 className="text-xl font-bold text-foreground mb-3 group-hover:text-primary transition-colors line-clamp-2">
                             {post.title}
                           </h3>
 
-                          {/* Excerpt */}
                           <p className="text-muted-foreground mb-4 flex-grow line-clamp-3">
                             {post.excerpt}
                           </p>
 
-                          {/* Meta Information */}
                           <div className="flex items-center gap-4 text-sm text-muted-foreground pt-4 border-t border-border">
                             <div className="flex items-center gap-1">
                               <Calendar className="w-4 h-4" />
@@ -138,7 +127,6 @@ export default function Home() {
                             </div>
                           </div>
 
-                          {/* Read More Button */}
                           <Button className="mt-4 w-full" variant="outline">
                             Czytaj więcej
                           </Button>
@@ -153,7 +141,6 @@ export default function Home() {
         </div>
       </main>
 
-      {/* Footer */}
       <footer className="border-t border-border bg-card mt-16">
         <div className="container py-12">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">

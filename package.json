@@ -6,9 +6,15 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "postbuild": "node -e \"const fs=require('fs');fs.writeFileSync('dist/.nojekyll','');fs.copyFileSync('dist/index.html','dist/404.html')\"",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "cms": "decap-server",
+    "dev:cms": "concurrently -n vite,cms -c blue,magenta \"npm:dev\" \"npm:cms\"",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist --dotfiles"
   },
+  "homepage": "https://marffinn.github.io/starfix-blog",
   "dependencies": {
     "@radix-ui/react-slot": "^1.1.0",
     "@radix-ui/react-tooltip": "^1.1.4",
@@ -17,6 +23,8 @@
     "lucide-react": "^0.469.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-markdown": "^10.1.0",
+    "remark-gfm": "^4.0.1",
     "sonner": "^1.7.1",
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",
@@ -29,6 +37,8 @@
     "@types/react-dom": "^18.3.5",
     "@vitejs/plugin-react": "^4.3.4",
     "autoprefixer": "^10.4.20",
+    "concurrently": "^9.2.1",
+    "decap-server": "^3.7.0",
     "eslint": "^9.17.0",
     "eslint-plugin-react-hooks": "^5.0.0",
     "eslint-plugin-react-refresh": "^0.4.16",

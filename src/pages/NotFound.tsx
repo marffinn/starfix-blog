@@ -1,11 +1,13 @@
 import { Link } from 'wouter';
 import { Button } from '@/components/ui/button';
+import Navbar from '@/components/Navbar';
 import { Home as HomeIcon, AlertCircle } from 'lucide-react';
 
 export default function NotFound() {
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center">
-      <div className="container py-12">
+    <div className="min-h-screen bg-background">
+      <Navbar />
+      <div className="container py-20 sm:py-28">
         <div className="max-w-md mx-auto text-center">
           <div className="w-20 h-20 bg-destructive/10 rounded-full flex items-center justify-center mx-auto mb-6">
             <AlertCircle className="w-10 h-10 text-destructive" />

@@ -1,7 +1,11 @@
 import { useParams, Link } from 'wouter';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import { blogPosts } from '@/data/blogPosts';
+import settings from '@/content/settings.json';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import Navbar from '@/components/Navbar';
 import { ArrowLeft, Calendar, Clock, Tag, Share2, Home as HomeIcon, ArrowRight } from 'lucide-react';
 
 export default function BlogPost() {
@@ -12,8 +16,9 @@ export default function BlogPost() {
 
   if (!post) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="container py-12 text-center">
+      <div className="min-h-screen bg-background">
+        <Navbar />
+        <div className="container py-20 text-center">
           <div className="max-w-md mx-auto">
             <h1 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">404</h1>
             <p className="text-lg text-muted-foreground mb-6">Przepraszamy, artykuł, który szukasz, nie istnieje.</p>
@@ -37,24 +42,17 @@ export default function BlogPost() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b border-border bg-card">
-        <div className="container py-4 sm:py-6">
-          <Link href="/">
-            <a className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors">
-              <ArrowLeft className="w-4 h-4" />
-              <span className="hidden sm:inline">Wróć do bloga</span>
-              <span className="sm:hidden">Wróć</span>
-            </a>
-          </Link>
-        </div>
-      </header>
+      <Navbar />
 
-      <main className="container py-8 sm:py-12">
+      <main className="container py-6 sm:py-10">
+        <Link href="/">
+          <a className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors mb-6 sm:mb-8">
+            <ArrowLeft className="w-4 h-4" />
+            <span>Wróć do bloga</span>
+          </a>
+        </Link>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
-          {/* Article Content */}
           <article className="lg:col-span-2 order-2 lg:order-1">
-            {/* Article Header */}
             <div className="mb-8">
               <div className="flex flex-wrap items-center gap-3 mb-4">
                 <span className="inline-flex items-center gap-1.5 text-sm font-semibold px-3 py-1 bg-primary/10 text-primary rounded-full">
@@ -76,37 +74,54 @@ export default function BlogPost() {
               </h1>
             </div>
 
-            {/* Article Content */}
             <div className="prose prose-lg max-w-none">
-              {post.content.split('\n\n').map((paragraph, index) => {
-                if (paragraph.startsWith('**') && paragraph.endsWith('**')) {
-                  return (
-                    <h2 key={index} className="text-xl sm:text-2xl font-bold text-foreground mt-8 mb-4">
-                      {paragraph.replace(/\*\*/g, '')}
-                    </h2>
-                  );
-                }
-                if (paragraph.startsWith('-')) {
-                  const items = paragraph.split('\n').filter(line => line.startsWith('-'));
-                  return (
-                    <ul key={index} className="list-disc list-inside space-y-2 mb-6 text-muted-foreground">
-                      {items.map((item, itemIndex) => (
-                        <li key={itemIndex} className="leading-relaxed">
-                          {item.replace(/^-\s*/, '').replace(/\*\*(.*?)\*\*/g, '$1')}
-                        </li>
-                      ))}
-                    </ul>
-                  );
-                }
-                return (
-                  <p key={index} className="text-muted-foreground mb-4 leading-relaxed">
-                    {paragraph.replace(/\*\*(.*?)\*\*/g, (_match, text) => text)}
-                  </p>
-                );
-              })}
+              <ReactMarkdown
+                remarkPlugins={[remarkGfm]}
+                components={{
+                  h1: ({ children }) => (
+                    <h2 className="text-2xl sm:text-3xl font-bold text-foreground mt-8 mb-4">{children}</h2>
+                  ),
+                  h2: ({ children }) => (
+                    <h2 className="text-xl sm:text-2xl font-bold text-foreground mt-8 mb-4">{children}</h2>
+                  ),
+                  h3: ({ children }) => (
+                    <h3 className="text-lg sm:text-xl font-bold text-foreground mt-6 mb-3">{children}</h3>
+                  ),
+                  p: ({ children }) => (
+                    <p className="text-muted-foreground mb-4 leading-relaxed">{children}</p>
+                  ),
+                  ul: ({ children }) => (
+                    <ul className="list-disc list-inside space-y-2 mb-6 text-muted-foreground">{children}</ul>
+                  ),
+                  ol: ({ children }) => (
+                    <ol className="list-decimal list-inside space-y-2 mb-6 text-muted-foreground">{children}</ol>
+                  ),
+                  li: ({ children }) => <li className="leading-relaxed">{children}</li>,
+                  strong: ({ children }) => <strong className="font-semibold text-foreground">{children}</strong>,
+                  a: ({ href, children }) => (
+                    <a
+                      href={href}
+                      target={href?.startsWith('http') ? '_blank' : undefined}
+                      rel={href?.startsWith('http') ? 'noopener noreferrer' : undefined}
+                      className="text-primary hover:underline"
+                    >
+                      {children}
+                    </a>
+                  ),
+                  blockquote: ({ children }) => (
+                    <blockquote className="border-l-4 border-primary/40 pl-4 italic text-muted-foreground my-4">
+                      {children}
+                    </blockquote>
+                  ),
+                  code: ({ children }) => (
+                    <code className="bg-secondary text-foreground px-1.5 py-0.5 rounded text-sm">{children}</code>
+                  ),
+                }}
+              >
+                {post.content}
+              </ReactMarkdown>
             </div>
 
-            {/* Share Section */}
             <div className="mt-10 pt-8 border-t border-border">
               <div className="flex items-center gap-4">
                 <span className="text-foreground font-medium">Udostępnij:</span>
@@ -121,28 +136,28 @@ export default function BlogPost() {
               </div>
             </div>
 
-            {/* CTA Card */}
-            <Card className="mt-8 p-6 sm:p-8 bg-gradient-to-br from-blue-600 to-blue-700 text-white border-0 shadow-xl">
-              <h3 className="text-xl font-bold mb-3">
-                Interesują Cię produkty omawiane w tym artykule?
-              </h3>
-              <p className="text-blue-100 mb-6">
-                Wszystkie produkty z naszych artykułów dostępne są w naszym sklepie internetowym. 
-                Odwiedź sklep.starfix.eu i zapoznaj się z pełną ofertą.
-              </p>
-              <a href="https://sklep.starfix.eu" target="_blank" rel="noopener noreferrer">
-                <Button className="w-full sm:w-auto bg-white text-blue-600 hover:bg-blue-50 font-semibold">
-                  Przejdź do sklepu
-                  <ArrowRight className="w-4 h-4 ml-2" />
-                </Button>
-              </a>
+            <Card className="relative overflow-hidden mt-8 p-6 sm:p-8 brand-gradient text-primary-foreground border-0 shadow-xl shadow-primary/25">
+              <div className="absolute -right-12 -top-12 w-48 h-48 rounded-full bg-white/10 blur-3xl" />
+              <div className="relative">
+                <h3 className="text-xl sm:text-2xl font-bold mb-3">
+                  Interesują Cię produkty omawiane w tym artykule?
+                </h3>
+                <p className="text-primary-foreground/85 mb-6 leading-relaxed">
+                  Wszystkie produkty z naszych artykułów dostępne są w naszym sklepie internetowym.
+                  Odwiedź sklep.starfix.eu i zapoznaj się z pełną ofertą.
+                </p>
+                <a href={settings.storeCta.url} target="_blank" rel="noopener noreferrer">
+                  <Button className="w-full sm:w-auto bg-background text-foreground hover:bg-background/90 font-semibold">
+                    {settings.storeCta.buttonLabel}
+                    <ArrowRight className="w-4 h-4 ml-2" />
+                  </Button>
+                </a>
+              </div>
             </Card>
           </article>
 
-          {/* Sidebar */}
           <aside className="lg:col-span-1 order-1 lg:order-2">
             <div className="sticky top-24 space-y-6">
-              {/* Related Posts */}
               {relatedPosts.length > 0 && (
                 <Card className="p-4 sm:p-6 border-2 shadow-lg">
                   <h3 className="text-lg font-bold text-foreground mb-4">Powiązane artykuły</h3>
@@ -165,7 +180,6 @@ export default function BlogPost() {
                 </Card>
               )}
 
-              {/* Newsletter */}
               <Card className="p-4 sm:p-6 border-2 shadow-lg bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-900">
                 <h3 className="font-bold text-foreground mb-2">Bądź na bieżąco</h3>
                 <p className="text-sm text-muted-foreground mb-4">
@@ -183,17 +197,16 @@ export default function BlogPost() {
                 </form>
               </Card>
 
-              {/* Contact */}
               <Card className="p-4 sm:p-6 border-2 shadow-lg">
                 <h3 className="font-bold text-foreground mb-4">Masz pytania?</h3>
                 <p className="text-sm text-muted-foreground mb-4">
                   Skontaktuj się z nami, jeśli masz pytania dotyczące produktów lub artykułów.
                 </p>
-                <a href="mailto:biuro@starfix.eu" className="text-primary hover:underline text-sm font-semibold block">
-                  biuro@starfix.eu
+                <a href={`mailto:${settings.contact.email}`} className="text-primary hover:underline text-sm font-semibold block">
+                  {settings.contact.email}
                 </a>
                 <p className="text-sm text-muted-foreground mt-2">
-                  Tel: +48 77 472 62 65
+                  Tel: {settings.contact.phone}
                 </p>
               </Card>
             </div>
@@ -201,27 +214,32 @@ export default function BlogPost() {
         </div>
       </main>
 
-      {/* Footer */}
       <footer className="border-t border-border bg-card mt-12">
         <div className="container py-10 sm:py-14">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
             <div className="sm:col-span-2 lg:col-span-1">
-              <h4 className="font-bold text-lg text-foreground mb-4">O Starfix</h4>
+              <img
+                src={`${import.meta.env.BASE_URL}starfix.png`}
+                alt="Starfix"
+                className="h-8 w-auto mb-4"
+                loading="lazy"
+                decoding="async"
+              />
               <p className="text-muted-foreground text-sm leading-relaxed">
-                Technika zamocowań Amex Starfix – profesjonalne produkty dla branży budowlanej od 1990 roku.
+                {settings.footer.tagline}
               </p>
             </div>
             <div>
               <h4 className="font-bold text-lg text-foreground mb-4">Szybkie Linki</h4>
               <ul className="space-y-2 text-sm">
                 <li>
-                  <a href="https://sklep.starfix.eu" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
-                    Sklep internetowy
+                  <a href={settings.footer.links.shopUrl} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
+                    {settings.footer.links.shopLabel}
                   </a>
                 </li>
                 <li>
-                  <a href="https://starfix.eu" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
-                    Strona główna
+                  <a href={settings.footer.links.siteUrl} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
+                    {settings.footer.links.siteLabel}
                   </a>
                 </li>
                 <li>
@@ -236,23 +254,23 @@ export default function BlogPost() {
             <div>
               <h4 className="font-bold text-lg text-foreground mb-4">Kontakt</h4>
               <div className="text-muted-foreground text-sm space-y-1">
-                <p>ul. Strzelecka 17</p>
-                <p>47-230 Kędzierzyn-Koźle</p>
-                <p className="mt-2">Tel: +48 77 472 62 65</p>
-                <p>Email: biuro@starfix.eu</p>
+                <p>{settings.contact.street}</p>
+                <p>{settings.contact.city}</p>
+                <p className="mt-2">Tel: {settings.contact.phone}</p>
+                <p>Email: {settings.contact.email}</p>
               </div>
             </div>
             <div>
               <h4 className="font-bold text-lg text-foreground mb-4">Godziny otwarcia</h4>
               <div className="text-muted-foreground text-sm space-y-1">
-                <p>Pon-Pt: 7:00 - 17:00</p>
-                <p>Sob: 8:00 - 13:00</p>
-                <p className="mt-2 text-primary font-medium">Dostawa 24h</p>
+                <p>{settings.openingHours.weekdays}</p>
+                <p>{settings.openingHours.saturday}</p>
+                <p className="mt-2 text-primary font-medium">{settings.openingHours.note}</p>
               </div>
             </div>
           </div>
           <div className="border-t border-border pt-6 text-center text-sm text-muted-foreground">
-            <p>&copy; 2026 Technika Zamocowań Amex Starfix. Wszystkie prawa zastrzeżone.</p>
+            <p>{settings.footer.copyright}</p>
           </div>
         </div>
       </footer>
